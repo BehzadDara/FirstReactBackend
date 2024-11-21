@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/tasks", async (FierstReactBackendDBContext db) =>
 {
+    Thread.Sleep(1000);
     var tasks = await db.Tasks.OrderBy(x => x.IsDone).ThenBy(x => x.Priority).ThenByDescending(x => x.Id).ToListAsync();
     return Results.Ok(tasks);
 });
