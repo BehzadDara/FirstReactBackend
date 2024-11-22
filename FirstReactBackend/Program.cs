@@ -30,11 +30,34 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/tasks", async (FierstReactBackendDBContext db) =>
+app.MapGet("/tasks", async (FierstReactBackendDBContext db, int pageNumber, int pageSize) =>
 {
     Thread.Sleep(1000);
-    var tasks = await db.Tasks.OrderBy(x => x.IsDone).ThenBy(x => x.Priority).ThenByDescending(x => x.Id).ToListAsync();
-    return Results.Ok(tasks);
+
+    var tasks = await
+    db
+    .Tasks
+    .OrderBy(x => x.IsDone)
+    .ThenBy(x => x.Priority)
+    .ThenByDescending(x => x.Id)
+    .Skip(pageSize * (pageNumber - 1))
+    .Take(pageSize)
+    .ToListAsync();
+
+    var totalCount = await
+    db
+    .Tasks
+    .CountAsync();
+
+    var result = new TasksListViewModel
+    {
+        TotalCount = totalCount,
+        PageSize = pageSize,
+        PageNumber = pageNumber,
+        Tasks = tasks
+    };
+
+    return Results.Ok(result);
 });
 
 app.MapGet("/tasks/{id:int}", async (FierstReactBackendDBContext db, int id) =>
