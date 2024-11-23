@@ -1,6 +1,6 @@
 ﻿namespace FirstReactBackend;
 
-public class Task
+public class TaskEntity
 {
     public int Id { get; set; }
     public required string Title { get; set; }

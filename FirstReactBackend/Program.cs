@@ -1,6 +1,5 @@
 using FirstReactBackend;
 using Microsoft.EntityFrameworkCore;
-using Task = FirstReactBackend.Task;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +15,12 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -80,7 +82,7 @@ app.MapPost("/tasks", async (FierstReactBackendDBContext db, CreateTaskDTO input
         return Results.BadRequest($"Invalid priority value: {input.Priority}. Allowed values are: High (0), Low (1), Medium (2).");
     }
 
-    var task = new Task
+    var task = new TaskEntity
     {
         Title = input.Title,
         Priority = input.Priority,
@@ -112,5 +114,7 @@ app.MapPatch("/tasks/{id:int}", async (FierstReactBackendDBContext db, int id) =
     await db.SaveChangesAsync();
     return Results.Ok(task);
 });
+
+app.MapHub<TimerHub>("/timer");
 
 app.Run();

@@ -3,13 +3,13 @@
 namespace FirstReactBackend;
 public class FierstReactBackendDBContext(DbContextOptions<FierstReactBackendDBContext> options) : DbContext(options)
 {
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<TaskEntity> Tasks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Task>(entity =>
+        modelBuilder.Entity<TaskEntity>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(100);
