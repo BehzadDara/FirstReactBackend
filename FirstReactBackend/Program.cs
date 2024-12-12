@@ -102,7 +102,8 @@ app.MapPost("/Users/Login", async (FierstReactBackendDBContext db, TokenService 
 
     var token = tokenService.Generate(user.Id);
 
-    return Results.Ok(token);
+    var result = new TokenDTO { Token = token };
+    return Results.Ok(result);
 });
 
 app.MapPost("/Users/Register", async (FierstReactBackendDBContext db, TokenService tokenService, LoginRegisterDTO input) =>
@@ -127,7 +128,8 @@ app.MapPost("/Users/Register", async (FierstReactBackendDBContext db, TokenServi
 
     var token = tokenService.Generate(user.Id);
 
-    return Results.Ok(token);
+    var result = new TokenDTO { Token = token };
+    return Results.Ok(result);
 });
 
 app.MapPatch("/Users", [Authorize] async (FierstReactBackendDBContext db, CurrentUser currentUser, ChangePasswordDTO input) =>
